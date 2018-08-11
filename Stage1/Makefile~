@@ -1,0 +1,15 @@
+
+# the next 3 lines define 3 macros, for example, macro CC is the same as gcc
+CC = gcc
+FILES = main.c dictionary.c
+EXE = yelp1
+
+
+# in the next 2 lines: "$(FILES)" is equivalent to "main.c dictionary.c dictionary.h"
+#                      "$(EXE)" is equivalent to “yelp1”
+#                      "$(CC)"  is equivalent to "gcc"  
+$(EXE): $(FILES)
+	$(CC) -g -o $(EXE) $(FILES)
+
+clean: 
+	rm -f *.o $(EXE)

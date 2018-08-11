@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+#include "dictionary.h"
+
+
+//Creates the dictionary struct node and returns its address
+dict_t *createDict() {
+	dict_t *pd= malloc(sizeof(*pd));
+	assert(pd);
+	pd->head = NULL;
+	pd->n = 0;
+	return pd;
+}
+
+
+//Create a seperate record for the data
+record_t *createRec(char *name, char *data) {
+	record_t *pr= malloc(sizeof(*pr));
+	assert(pr);
+	strcpy(pr->name, name);
+	strcpy(pr->data, data);
+	return pr;
+}
+
+
+//Reads in a record and places it in the dictionary
+void insert( dict_t *pd, record_t *x) {
+	
+	//Checks if first element
+	if(pd->head == NULL) {
+		pd->head = x;
+	} else {
+		record_t *pr = pd->head;
+		
+		//While not at the end of the dictionary
+		while (pr->larger != NULL || pr->lesser != NULL) {
+			
+			//If larger
+			if (larger(x->name, pr->name)) {
+				if(pr->larger == NULL) {
+					pr->larger = x;
+					return;
+				}
+				pr = pr->larger;
+				
+			//If lesser or equal
+			} else {
+				if(pr->lesser == NULL) {
+					pr->lesser = x;
+					return;
+				}
+				pr = pr->lesser;
+			}
+		}	
+	}
+}
+
+
+/*Compares two values to see if larger or if lesser or equal*/
+
+int larger(char A[NAME_SIZE], char B[NAME_SIZE]) {
+	int a[NAME_SIZE], b[NAME_SIZE];
+	int i;
+	for (i = 0; A[i] != '\0' || B[i] != '\0'; i++) {
+		a[i] = (int)A[i];
+		b[i] = (int)B[i];
+		if (a[i] > b[i]) {
+			return 1;
+		}
+		if (a[i] < b[i]) {
+			return 0;
+		}
+	}
+	return 0;
+}
+
+int equals(char A[NAME_SIZE], char B[NAME_SIZE]) {
+	int a[NAME_SIZE], b[NAME_SIZE];
+	int i;
+	for (i = 0; A[i] != '\0' || B[i] != '\0'; i++) {
+		a[i] = (int)A[i];
+		b[i] = (int)B[i];
+		if (a[i] != b[i]) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+record_t *search(char name, dict_t *pd) {
+	
+	if(pd->head == NULL) {
+		printf("no tree found");
+		exit(EXIT_FAILURE);
+	} else {
+		record_t *pr = pd->head;
+		
+		//While not at the end of the dictionary
+		while (pr->larger != NULL || pr->lesser != NULL) {
+			
+			if (larger(&name, pr->name)) {
+				if(pr->larger == NULL) {
+					printf("Key not found");
+					return NULL;
+				}
+				pr = pr->larger;
+				
+			//If lesser or equal
+			} else {
+				
+				if(equals(&name, pr->name)) {
+					printf("Key found!");
+					return pr;
+				} else if (pr->lesser == NULL) {
+					printf("Key not found");
+					return NULL;
+				}
+				pr = pr->lesser;
+			}
+		}
+	}
+	return NULL; 
+}

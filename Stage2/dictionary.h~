@@ -1,0 +1,30 @@
+#ifndef _DICTIONARY_H_
+#define NAME_SIZE 64
+#define DATA_SIZE 1465
+#define _DICTIONARY_H_
+
+typedef struct record_t record_t;
+
+struct record_t {
+	char name[NAME_SIZE];
+	char data[DATA_SIZE];
+	record_t *larger, *lesser;
+};
+
+typedef struct {
+	record_t *head;
+	int n;
+} dict_t;
+
+
+
+// all function prototypes
+dict_t *createDict();
+record_t *createRec(char *name, char *data);
+record_t *search(char name, dict_t *pd);
+void read( dict_t *pd, record_t *x);
+void insert( dict_t *pd, record_t *x);
+int larger(char A[NAME_SIZE], char B[NAME_SIZE]);
+int equals(char A[NAME_SIZE], char B[NAME_SIZE]);
+
+#endif    
